@@ -1,0 +1,113 @@
+buildscript {
+    repositories {
+        maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.release' }
+	    mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'pl.allegro.tech.build', name: 'axion-gradle-plugin', version: '0.1.11'
+        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '0.3.1'
+        classpath group: 'pl.allegro.tech.build', name: 'sonar-bamboo-plugin', version: '0.3.1'
+        classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '1.0.2'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'jacoco'
+apply plugin: 'axion'
+apply plugin: 'axion-release'
+apply plugin: 'sonar-bamboo'
+
+scmVersion {
+    defaultRules {
+        prefix = project.rootProject.name
+    }
+}
+
+sourceCompatibility = 1.7
+
+project.group = 'pl.allegro.atm.workshop.rx'
+project.version = scmVersion.version
+
+repositories {
+    maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.release' }
+    maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro-release/' }
+    mavenCentral()
+}
+
+project.ext.versions = [
+    commons: '2.0.14'
+]
+
+dependencies {
+    compile (group: 'pl.allegro.tech.bootstrap.commons', name: 'profile-jersey-spring', version: project.ext.versions.commons ){
+        exclude group: 'junit'
+    }
+    compile (group: 'pl.allegro.tech.discovery.service-discovery', name: 'jersey-client-feature', version: '1.1.4') {
+        exclude group: 'org.slf4j'
+        exclude group: 'log4j'
+    }
+
+
+    compile group: 'joda-time',        name: 'joda-time',       version: '2.3'
+    compile group: 'com.google.guava', name: 'guava',           version: '17.0'
+    compile group: 'ch.qos.logback',   name: 'logback-classic', version: '1.1.2'
+    compile group: 'org.springframework',   name: 'spring-context', version: '4.1.1.RELEASE'
+    compile group: 'org.springframework',   name: 'spring-aspects', version: '4.1.1.RELEASE'
+    compile group: 'io.reactivex',     name: 'rxjava',      version: '1.0.0-rc.5'
+
+    testCompile group: 'junit',                 name: 'junit',             version: '4.11'
+    testCompile group: 'com.jayway.awaitility', name: 'awaitility',        version: '1.6.0'
+    testCompile group: 'org.mockito',           name: 'mockito-core',      version: '1.9.5'
+    testCompile group: 'pl.pragmatists',        name: 'JUnitParams',       version: '1.0.2'
+    testCompile group: 'org.assertj',           name: 'assertj-core',      version: '1.6.0'
+    testCompile group: 'org.assertj',           name: 'assertj-joda-time', version: '1.1.0'
+    testCompile group: 'org.assertj',           name: 'assertj-guava',     version: '1.1.0'
+    testCompile group: 'com.github.tomakehurst',     name: 'wiremock',     version: '1.50'
+
+    testCompile group: 'pl.allegro.tech.bootstrap.commons', name: 'core-integration', version: project.ext.versions.commons
+
+}
+
+mainClassName = 'pl.allegro.atm.workshop.rx.Server'
+
+
+
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
+integrationTest {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = "${project.name}-all"
+            from components.shadow
+        }
+    }
+    repositories {
+        maven {
+            url "https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.${project.version.endsWith('-SNAPSHOT') ? 'snapshot/' : 'release/'}"
+            credentials {
+                username project.ext.has('nexusUser') ? project.ext.nexusUser : ''
+                password project.ext.has('nexusPassword') ? project.ext.nexusPassword : ''
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}

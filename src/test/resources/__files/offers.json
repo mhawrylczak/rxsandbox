@@ -1,0 +1,864 @@
+{
+    "searchString": "mobius",
+    "count": 4,
+    "categories": {
+        "subcategories": [
+            {
+                "parent": "0",
+                "count": 3,
+                "hasChildren": true,
+                "id": "3919",
+                "name": "Sport i Turystyka"
+            },
+            {
+                "parent": "3919",
+                "count": 3,
+                "hasChildren": true,
+                "id": "13599",
+                "name": "Sporty zimowe"
+            },
+            {
+                "parent": "0",
+                "count": 1,
+                "hasChildren": true,
+                "id": "9",
+                "name": "Gry"
+            },
+            {
+                "parent": "9",
+                "count": 1,
+                "hasChildren": true,
+                "id": "5916",
+                "name": "Towarzyskie"
+            }
+        ],
+        "path": []
+    },
+    "filters": [
+        {
+            "id": "price",
+            "name": "Cena",
+            "values": [],
+            "range": true,
+            "controlType": 3,
+            "dataType": 4,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "state",
+            "name": "Województwo",
+            "values": [
+                {
+                    "id": "1",
+                    "name": "dolnośląskie",
+                    "count": null
+                },
+                {
+                    "id": "2",
+                    "name": "kujawsko-pomorskie",
+                    "count": null
+                },
+                {
+                    "id": "3",
+                    "name": "lubelskie",
+                    "count": null
+                },
+                {
+                    "id": "4",
+                    "name": "lubuskie",
+                    "count": null
+                },
+                {
+                    "id": "5",
+                    "name": "łódzkie",
+                    "count": null
+                },
+                {
+                    "id": "6",
+                    "name": "małopolskie",
+                    "count": null
+                },
+                {
+                    "id": "7",
+                    "name": "mazowieckie",
+                    "count": null
+                },
+                {
+                    "id": "8",
+                    "name": "opolskie",
+                    "count": null
+                },
+                {
+                    "id": "9",
+                    "name": "podkarpackie",
+                    "count": null
+                },
+                {
+                    "id": "10",
+                    "name": "podlaskie",
+                    "count": null
+                },
+                {
+                    "id": "11",
+                    "name": "pomorskie",
+                    "count": null
+                },
+                {
+                    "id": "12",
+                    "name": "śląskie",
+                    "count": null
+                },
+                {
+                    "id": "13",
+                    "name": "świętokrzyskie",
+                    "count": null
+                },
+                {
+                    "id": "14",
+                    "name": "warmińsko-mazurskie",
+                    "count": null
+                },
+                {
+                    "id": "15",
+                    "name": "wielkopolskie",
+                    "count": null
+                },
+                {
+                    "id": "16",
+                    "name": "zachodniopomorskie",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 2,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "city",
+                "distance",
+                "mainPage",
+                "postCode"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "department",
+            "name": "Dział",
+            "values": [
+                {
+                    "id": "electronics",
+                    "name": "Elektronika",
+                    "count": null
+                },
+                {
+                    "id": "fashionBeauty",
+                    "name": "Moda i uroda",
+                    "count": null
+                },
+                {
+                    "id": "householdHealth",
+                    "name": "Dom i zdrowie",
+                    "count": null
+                },
+                {
+                    "id": "baby",
+                    "name": "Dziecko",
+                    "count": null
+                },
+                {
+                    "id": "cultureEntertainment",
+                    "name": "Kultura i rozrywka",
+                    "count": null
+                },
+                {
+                    "id": "sportsLeisure",
+                    "name": "Sport i wypoczynek",
+                    "count": null
+                },
+                {
+                    "id": "automotive",
+                    "name": "Motoryzacja",
+                    "count": null
+                },
+                {
+                    "id": "collectionsArt",
+                    "name": "Kolekcje i sztuka",
+                    "count": null
+                },
+                {
+                    "id": "companyServices",
+                    "name": "Firma i usługi",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage",
+                "special"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "condition",
+            "name": "Stan",
+            "values": [
+                {
+                    "id": "new",
+                    "name": "Nowe",
+                    "count": 0
+                },
+                {
+                    "id": "used",
+                    "name": "Używane",
+                    "count": 3
+                }
+            ],
+            "range": false,
+            "controlType": 2,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "offerType",
+            "name": "Rodzaj oferty",
+            "values": [
+                {
+                    "id": "buyNow",
+                    "name": "Kup Teraz",
+                    "count": 4
+                },
+                {
+                    "id": "auction",
+                    "name": "Licytacje",
+                    "count": 3
+                }
+            ],
+            "range": false,
+            "controlType": 2,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "distance",
+            "name": "Dystans",
+            "values": [
+                {
+                    "id": "10km",
+                    "name": "10 km",
+                    "count": null
+                },
+                {
+                    "id": "25km",
+                    "name": "25 km",
+                    "count": null
+                },
+                {
+                    "id": "50km",
+                    "name": "50 km",
+                    "count": null
+                },
+                {
+                    "id": "75km",
+                    "name": "75 km",
+                    "count": null
+                },
+                {
+                    "id": "100km",
+                    "name": "100 km",
+                    "count": null
+                },
+                {
+                    "id": "150km",
+                    "name": "150 km",
+                    "count": null
+                },
+                {
+                    "id": "200km",
+                    "name": "200 km",
+                    "count": null
+                },
+                {
+                    "id": "350km",
+                    "name": "350 km",
+                    "count": null
+                },
+                {
+                    "id": "500km",
+                    "name": "500 km",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "city",
+                "mainPage",
+                "state"
+            ],
+            "dependsOn": [
+                "postCode"
+            ]
+        },
+        {
+            "id": "shippingTime",
+            "name": "Czas realizacji",
+            "values": [
+                {
+                    "id": "24h",
+                    "name": "24 godziny",
+                    "count": null
+                },
+                {
+                    "id": "2d",
+                    "name": "do 2 dni",
+                    "count": null
+                },
+                {
+                    "id": "3d",
+                    "name": "do 3 dni",
+                    "count": null
+                },
+                {
+                    "id": "4d",
+                    "name": "do 4 dni",
+                    "count": null
+                },
+                {
+                    "id": "5d",
+                    "name": "do 5 dni",
+                    "count": null
+                },
+                {
+                    "id": "7d",
+                    "name": "do 7 dni",
+                    "count": null
+                },
+                {
+                    "id": "10d",
+                    "name": "do 10 dni",
+                    "count": null
+                },
+                {
+                    "id": "14d",
+                    "name": "do 14 dni",
+                    "count": null
+                },
+                {
+                    "id": "21d",
+                    "name": "do 21 dni",
+                    "count": null
+                },
+                {
+                    "id": "more",
+                    "name": "dłużej",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "postCode",
+            "name": "Kod pocztowy",
+            "values": [],
+            "range": false,
+            "controlType": 3,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "city",
+                "mainPage",
+                "state"
+            ],
+            "dependsOn": [
+                "distance"
+            ]
+        },
+        {
+            "id": "city",
+            "name": "Miejscowość",
+            "values": [],
+            "range": false,
+            "controlType": 3,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "distance",
+                "mainPage",
+                "postCode",
+                "state"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "offerOptions",
+            "name": "Opcje oferty",
+            "values": [
+                {
+                    "id": "standardAllegro",
+                    "name": "Standard Allegro",
+                    "count": null
+                },
+                {
+                    "id": "freeShipping",
+                    "name": "Wysyłka gratis",
+                    "count": null
+                },
+                {
+                    "id": "installmentAvailable",
+                    "name": "Raty PayU",
+                    "count": null
+                },
+                {
+                    "id": "personalReceipt",
+                    "name": "Odbiór osobisty",
+                    "count": null
+                },
+                {
+                    "id": "vatInvoice",
+                    "name": "Faktura VAT",
+                    "count": null
+                },
+                {
+                    "id": "generalDelivery",
+                    "name": "Odbiór w punkcie",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 2,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "endingTime",
+            "name": "Kończące się w ciągu",
+            "values": [
+                {
+                    "id": "1h",
+                    "name": "1 godziny",
+                    "count": null
+                },
+                {
+                    "id": "2h",
+                    "name": "2 godzin",
+                    "count": null
+                },
+                {
+                    "id": "3h",
+                    "name": "3 godzin",
+                    "count": null
+                },
+                {
+                    "id": "4h",
+                    "name": "4 godzin",
+                    "count": null
+                },
+                {
+                    "id": "5h",
+                    "name": "5 godzin",
+                    "count": null
+                },
+                {
+                    "id": "12h",
+                    "name": "12 godzin",
+                    "count": null
+                },
+                {
+                    "id": "24h",
+                    "name": "24 godzin",
+                    "count": null
+                },
+                {
+                    "id": "2d",
+                    "name": "2 dni",
+                    "count": null
+                },
+                {
+                    "id": "3d",
+                    "name": "3 dni",
+                    "count": null
+                },
+                {
+                    "id": "4d",
+                    "name": "4 dni",
+                    "count": null
+                },
+                {
+                    "id": "5d",
+                    "name": "5 dni",
+                    "count": null
+                },
+                {
+                    "id": "6d",
+                    "name": "6 dni",
+                    "count": null
+                },
+                {
+                    "id": "7d",
+                    "name": "7 dni",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "startingTime",
+            "name": "Wystawione w ciągu",
+            "values": [
+                {
+                    "id": "1h",
+                    "name": "1 godziny",
+                    "count": null
+                },
+                {
+                    "id": "2h",
+                    "name": "2 godzin",
+                    "count": null
+                },
+                {
+                    "id": "3h",
+                    "name": "3 godzin",
+                    "count": null
+                },
+                {
+                    "id": "4h",
+                    "name": "4 godzin",
+                    "count": null
+                },
+                {
+                    "id": "5h",
+                    "name": "5 godzin",
+                    "count": null
+                },
+                {
+                    "id": "12h",
+                    "name": "12 godzin",
+                    "count": null
+                },
+                {
+                    "id": "24h",
+                    "name": "24 godzin",
+                    "count": null
+                },
+                {
+                    "id": "2d",
+                    "name": "2 dni",
+                    "count": null
+                },
+                {
+                    "id": "3d",
+                    "name": "3 dni",
+                    "count": null
+                },
+                {
+                    "id": "4d",
+                    "name": "4 dni",
+                    "count": null
+                },
+                {
+                    "id": "5d",
+                    "name": "5 dni",
+                    "count": null
+                },
+                {
+                    "id": "6d",
+                    "name": "6 dni",
+                    "count": null
+                },
+                {
+                    "id": "7d",
+                    "name": "7 dni",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        },
+        {
+            "id": "special",
+            "name": "Typ listingu",
+            "values": [
+                {
+                    "id": "new",
+                    "name": "Najnowsze",
+                    "count": null
+                },
+                {
+                    "id": "ending",
+                    "name": "Kończące się",
+                    "count": null
+                }
+            ],
+            "range": false,
+            "controlType": 1,
+            "dataType": 1,
+            "group": 1,
+            "excludedWith": [
+                "categoryPage",
+                "department",
+                "departmentPage",
+                "mainPage"
+            ],
+            "dependsOn": []
+        }
+    ],
+    "filtersSections": [
+        {
+            "name": "Przedmiot i wysyłka",
+            "filters": [
+                "condition",
+                "price",
+                "offerType"
+            ]
+        },
+        {
+            "name": "Lokalizacja",
+            "filters": [
+                "state",
+                "city",
+                "distance",
+                "postCode"
+            ]
+        },
+        {
+            "name": "Opcje oferty",
+            "filters": [
+                "offerOptions"
+            ]
+        },
+        {
+            "name": "Inne",
+            "filters": [
+                "startingTime",
+                "endingTime",
+                "shippingTime",
+                "department",
+                "special"
+            ]
+        }
+    ],
+    "promotedCount": 0,
+    "offers": [
+        {
+            "location": {
+                "country": 1
+            },
+            "seller": {
+                "rating": 6070,
+                "id": "2227849",
+                "login": "pawel_przybyla"
+            },
+            "source": {
+                "id": null,
+                "type": 0,
+                "url": "http://allegro.pl/show_item.php?item=4639942013"
+            },
+            "condition": 0,
+            "freeShipping": false,
+            "features": {
+                "promotion": false,
+                "highlight": false,
+                "bold": false
+            },
+            "prices": {
+                "cheapestShipment": 4.5,
+                "bid": null,
+                "buyNow": 2.95
+            },
+            "secondsLeft": 1311581,
+            "endingTime": 1414186385,
+            "buyNow": true,
+            "auction": false,
+            "allegroStandard": true,
+            "mainImage": {
+                "small": "http://img11.allegroimg.pl/photos/128x96/46/39/94/20/4639942013",
+                "medium": "http://img11.allegroimg.pl/photos/400x300/46/39/94/20/4639942013",
+                "large": "http://img11.allegroimg.pl/photos/400x300/46/39/94/20/4639942013"
+            },
+            "bids": {
+                "count": 0
+            },
+            "id": "4639942013",
+            "name": "*JAPAN DUEL MASTERS - MOBIUS CLOISTER - !!!"
+        },
+        {
+            "location": {
+                "country": 1
+            },
+            "seller": {
+                "rating": 1633,
+                "id": "26233270",
+                "login": "modnyciuszek-aw"
+            },
+            "source": {
+                "id": null,
+                "type": 0,
+                "url": "http://allegro.pl/show_item.php?item=4661307943"
+            },
+            "condition": 2,
+            "freeShipping": false,
+            "features": {
+                "promotion": false,
+                "highlight": false,
+                "bold": false
+            },
+            "prices": {
+                "cheapestShipment": 8.5,
+                "bid": 29.99,
+                "buyNow": 40
+            },
+            "secondsLeft": 183282,
+            "endingTime": 1413058086,
+            "buyNow": true,
+            "auction": true,
+            "allegroStandard": true,
+            "mainImage": {
+                "small": "http://img06.allegroimg.pl/photos/128x96/46/61/30/79/4661307943",
+                "medium": "http://img06.allegroimg.pl/photos/400x300/46/61/30/79/4661307943",
+                "large": "http://img06.allegroimg.pl/photos/400x300/46/61/30/79/4661307943"
+            },
+            "bids": {
+                "count": 0
+            },
+            "id": "4661307943",
+            "name": "SPODNIE NA NARTY MOBIUS rozm. 140146"
+        },
+        {
+            "location": {
+                "country": 1
+            },
+            "seller": {
+                "rating": 1633,
+                "id": "26233270",
+                "login": "modnyciuszek-aw"
+            },
+            "source": {
+                "id": null,
+                "type": 0,
+                "url": "http://allegro.pl/show_item.php?item=4667112808"
+            },
+            "condition": 2,
+            "freeShipping": false,
+            "features": {
+                "promotion": false,
+                "highlight": false,
+                "bold": false
+            },
+            "prices": {
+                "cheapestShipment": 8.5,
+                "bid": 29.99,
+                "buyNow": 35
+            },
+            "secondsLeft": 350745,
+            "endingTime": 1413225549,
+            "buyNow": true,
+            "auction": true,
+            "allegroStandard": true,
+            "mainImage": {
+                "small": "http://img06.allegroimg.pl/photos/128x96/46/67/11/28/4667112808",
+                "medium": "http://img06.allegroimg.pl/photos/400x300/46/67/11/28/4667112808",
+                "large": "http://img06.allegroimg.pl/photos/400x300/46/67/11/28/4667112808"
+            },
+            "bids": {
+                "count": 0
+            },
+            "id": "4667112808",
+            "name": "NA NARTY MOBIUS rozm. S"
+        },
+        {
+            "location": {
+                "country": 1
+            },
+            "seller": {
+                "rating": 1633,
+                "id": "26233270",
+                "login": "modnyciuszek-aw"
+            },
+            "source": {
+                "id": null,
+                "type": 0,
+                "url": "http://allegro.pl/show_item.php?item=4661307927"
+            },
+            "condition": 2,
+            "freeShipping": false,
+            "features": {
+                "promotion": false,
+                "highlight": false,
+                "bold": false
+            },
+            "prices": {
+                "cheapestShipment": 8.5,
+                "bid": 39.99,
+                "buyNow": 50
+            },
+            "secondsLeft": 183282,
+            "endingTime": 1413058086,
+            "buyNow": true,
+            "auction": true,
+            "allegroStandard": true,
+            "mainImage": {
+                "small": "http://img06.allegroimg.pl/photos/128x96/46/61/30/79/4661307927",
+                "medium": "http://img06.allegroimg.pl/photos/400x300/46/61/30/79/4661307927",
+                "large": "http://img06.allegroimg.pl/photos/400x300/46/61/30/79/4661307927"
+            },
+            "bids": {
+                "count": 0
+            },
+            "id": "4661307927",
+            "name": "SPODNIE NA NARTY SANKI MOBIUS rozm. 110/116"
+        }
+    ]
+}
