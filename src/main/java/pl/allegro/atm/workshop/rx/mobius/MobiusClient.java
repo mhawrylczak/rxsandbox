@@ -8,6 +8,7 @@ import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferDetails;
 import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
+import rx.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -47,14 +48,22 @@ public class MobiusClient {
                 .request(MediaType.APPLICATION_JSON_TYPE);
     }
 
-    public DoGetItemsListCollection searchOffers(String searchString) {
+// TODO create Observable
+//was:
+//  public DoGetItemsListCollection searchOffers(String searchString) {
+    public Observable<DoGetItemsListCollection> searchOffers(String searchString) {
         OffersFacadeV2Request request = new OffersFacadeV2Request();
         request.setSearchString(searchString);
         request.setLimit(5);
-        return searchInvocationBuilder()
-                .post(
-                        Entity.entity(request, MediaType.APPLICATION_JSON_TYPE),
-                        DoGetItemsListCollection.class);
+//was:
+//        searchInvocationBuilder()
+//                .post(
+//                        Entity.entity(request, MediaType.APPLICATION_JSON_TYPE),
+//                        DoGetItemsListCollection.class);
+//now:
+//        searchInvocationBuilder().async().post( ... )
+
+        return null;
     }
 
     private Invocation.Builder searchInvocationBuilder() {

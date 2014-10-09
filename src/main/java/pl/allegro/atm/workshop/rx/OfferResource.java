@@ -18,7 +18,7 @@ public class OfferResource {
     @GET
     public List<Offer> search(@QueryParam("q") String searchString) {
         return offerAssembler.convert(
-                mobiusClient.searchOffers(searchString));
+                mobiusClient.searchOffers(searchString).toBlocking().single());
     }
 
     @GET
