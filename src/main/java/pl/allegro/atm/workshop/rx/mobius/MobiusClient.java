@@ -9,11 +9,13 @@ import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
 import rx.Observable;
+import rx.Subscriber;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
@@ -48,22 +50,33 @@ public class MobiusClient {
                 .request(MediaType.APPLICATION_JSON_TYPE);
     }
 
-// TODO create Observable
-//was:
-//  public DoGetItemsListCollection searchOffers(String searchString) {
     public Observable<DoGetItemsListCollection> searchOffers(String searchString) {
-        OffersFacadeV2Request request = new OffersFacadeV2Request();
+        final OffersFacadeV2Request request = new OffersFacadeV2Request();
         request.setSearchString(searchString);
         request.setLimit(5);
-//was:
-//        searchInvocationBuilder()
-//                .post(
-//                        Entity.entity(request, MediaType.APPLICATION_JSON_TYPE),
-//                        DoGetItemsListCollection.class);
-//now:
-//        searchInvocationBuilder().async().post( ... )
 
-        return null;
+        return Observable.create(new Observable.OnSubscribe<DoGetItemsListCollection>() {
+            @Override
+            public void call(final Subscriber<? super DoGetItemsListCollection> subscriber) {
+                searchInvocationBuilder().async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new InvocationCallback<DoGetItemsListCollection>() {
+                    @Override
+                    public void completed(DoGetItemsListCollection o) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onNext(o);
+                            subscriber.onCompleted();
+                        }
+                    }
+
+                    @Override
+                    public void failed(Throwable throwable) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onError(throwable);
+                            subscriber.unsubscribe();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private Invocation.Builder searchInvocationBuilder() {
