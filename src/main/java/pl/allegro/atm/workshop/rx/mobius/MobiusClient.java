@@ -38,8 +38,29 @@ public class MobiusClient {
 
     private String token;
 
-    public AllegroOfferDetails findOffer(String offerId) {
-        return findOfferInvocationBuilder(offerId).get(AllegroOfferDetails.class);
+    public Observable<AllegroOfferDetails> findOffer(final String offerId) {
+        return Observable.create(new Observable.OnSubscribe<AllegroOfferDetails>() {
+            @Override
+            public void call(final Subscriber<? super AllegroOfferDetails> subscriber) {
+                findOfferInvocationBuilder(offerId).async().get(new InvocationCallback<AllegroOfferDetails>() {
+                    @Override
+                    public void completed(AllegroOfferDetails o) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onNext(o);
+                            subscriber.onCompleted();
+                        }
+                    }
+
+                    @Override
+                    public void failed(Throwable throwable) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onError(throwable);
+                            subscriber.unsubscribe();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private Invocation.Builder findOfferInvocationBuilder(String offerId) {

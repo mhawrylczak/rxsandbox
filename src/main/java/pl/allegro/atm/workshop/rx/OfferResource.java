@@ -1,6 +1,7 @@
 package pl.allegro.atm.workshop.rx;
 
 import pl.allegro.atm.workshop.rx.mobius.MobiusClient;
+import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferDetails;
 import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import rx.Observable;
 import rx.functions.Action1;
@@ -23,7 +24,7 @@ public class OfferResource {
 
     @GET
     public void search(@QueryParam("q") String searchString, @Suspended final AsyncResponse asyncResponse) {
-        Observable<DoGetItemsListCollection> observableOffers =  mobiusClient.searchOffers(searchString);
+        Observable<DoGetItemsListCollection> observableOffers = mobiusClient.searchOffers(searchString);
         Observable<List<Offer>> observableList = observableOffers.map(new Func1<DoGetItemsListCollection, List<Offer>>() {
             @Override
             public List<Offer> call(DoGetItemsListCollection doGetItemsListCollection) {
@@ -43,11 +44,25 @@ public class OfferResource {
         });
     }
 
-    //TODO asynchronous offer
     @GET
     @Path("{id}")
-    public Offer offer(@PathParam("id") String id) {
-        return offerAssembler.convert(
-                mobiusClient.findOffer(id));
+    public void offer(@PathParam("id") String id, @Suspended final AsyncResponse asyncResponse) {
+        Observable<Offer> offerObservable = mobiusClient.findOffer(id).map(new Func1<AllegroOfferDetails, Offer>() {
+            @Override
+            public Offer call(AllegroOfferDetails offerDetails) {
+                return offerAssembler.convert(offerDetails);
+            }
+        });
+        offerObservable.subscribe(new Action1<Offer>() {
+            @Override
+            public void call(Offer offer) {
+                asyncResponse.resume(offer);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                asyncResponse.resume(throwable);
+            }
+        });
     }
 }
