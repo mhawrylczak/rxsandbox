@@ -108,6 +108,7 @@ public class MobiusClient {
     }
 
 
+    //TODO createToken uses blocking call, make it async - use Observable, and Subject to cache response
     public synchronized String getToken() {
         if (token == null) {
             token = createToken();
