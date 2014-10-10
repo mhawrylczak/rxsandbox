@@ -3,6 +3,8 @@ package pl.allegro.atm.workshop.rx;
 import pl.allegro.atm.workshop.rx.mobius.MobiusClient;
 import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,17 +21,26 @@ public class OfferResource {
     @Inject
     private MobiusClient mobiusClient;
 
-//TODO
-//was:
-//    @GET
-//    public List<Offer> search(@QueryParam("q") String searchString) {
-//
     @GET
     public void search(@QueryParam("q") String searchString, @Suspended final AsyncResponse asyncResponse) {
         Observable<DoGetItemsListCollection> observableOffers =  mobiusClient.searchOffers(searchString);
-//now use:
-//        asyncResponse.resume(List<Offer>) and asyncResponse.resume(Throwable)
-//        offerAssembler.convert
+        Observable<List<Offer>> observableList = observableOffers.map(new Func1<DoGetItemsListCollection, List<Offer>>() {
+            @Override
+            public List<Offer> call(DoGetItemsListCollection doGetItemsListCollection) {
+                return offerAssembler.convert(doGetItemsListCollection);
+            }
+        });
+        observableList.subscribe(new Action1<List<Offer>>() {
+            @Override
+            public void call(List<Offer> offers) {
+                asyncResponse.resume(offers);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                asyncResponse.resume(throwable);
+            }
+        });
     }
 
     @GET
