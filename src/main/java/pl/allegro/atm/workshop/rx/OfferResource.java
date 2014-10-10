@@ -43,6 +43,7 @@ public class OfferResource {
         });
     }
 
+    //TODO asynchronous offer
     @GET
     @Path("{id}")
     public Offer offer(@PathParam("id") String id) {
