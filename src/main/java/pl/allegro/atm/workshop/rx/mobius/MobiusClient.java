@@ -10,6 +10,7 @@ import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 import rx.subjects.AsyncSubject;
 import rx.subjects.Subject;
 
@@ -38,12 +39,16 @@ public class MobiusClient {
     @Value("${mobiusKeyPassword}")
     private String keyPassword;
 
-    private Observable<String> tokenObservable;
+    private Subject<String, String> tokenSubject;
 
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
-        //TODO
-        // use getToken() and getAllegroOfferDetailsObservable()
-        return null;
+        Observable<Observable<AllegroOfferDetails>> ooOffer = getToken().map(new Func1<String, Observable<AllegroOfferDetails>>() {
+            @Override
+            public Observable<AllegroOfferDetails> call(String token) {
+                return getAllegroOfferDetailsObservable(offerId, token);
+            }
+        });
+        return Observable.merge(ooOffer);
     }
 
     private Observable<AllegroOfferDetails> getAllegroOfferDetailsObservable(final String offerId, final String token) {
@@ -84,10 +89,14 @@ public class MobiusClient {
         request.setSearchString(searchString);
         request.setLimit(5);
 
-       //TODO
-        // use getToken() and getDoGetItemsListCollectionObservable()
+        Observable<Observable<DoGetItemsListCollection>> ooItems = getToken().map(new Func1<String, Observable<DoGetItemsListCollection>>() {
+            @Override
+            public Observable<DoGetItemsListCollection> call(final String token) {
+                return getDoGetItemsListCollectionObservable(token, request);
+            }
+        });
 
-        return null;
+        return Observable.merge(ooItems);
 
     }
 
@@ -123,13 +132,13 @@ public class MobiusClient {
                 .request(MediaType.APPLICATION_JSON_TYPE);
     }
 
+
     public synchronized Observable<String> getToken() {
-        if (tokenObservable == null) {
-            //TODO
-            //cache tokens
-            tokenObservable = createToken();
+        if (tokenSubject == null) {
+            tokenSubject = AsyncSubject.create();
+            createToken().subscribe(tokenSubject);
         }
-        return tokenObservable;
+        return tokenSubject.asObservable();
     }
 
     private Observable<String> createToken() {
