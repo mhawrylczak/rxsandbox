@@ -18,9 +18,12 @@ public class OfferAssembler {
         Offer offer = new Offer();
         offer.setId(offerDetails.getId());
         offer.setName(offerDetails.getName());
+        offer.setViews(offerDetails.getViews());
         return offer;
     }
 
+    //TODO
+    //view property was added to Offer but it is not available in DoGetItemsListCollection
     public List<Offer> convert(DoGetItemsListCollection items) {
         return Lists.transform(items.getOffers(), new Function<AllegroOfferV2, Offer>() {
             @Nullable
