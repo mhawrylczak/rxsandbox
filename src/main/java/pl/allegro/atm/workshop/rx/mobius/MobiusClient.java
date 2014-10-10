@@ -10,6 +10,8 @@ import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
 import rx.Observable;
 import rx.Subscriber;
+import rx.subjects.AsyncSubject;
+import rx.subjects.Subject;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,13 +38,19 @@ public class MobiusClient {
     @Value("${mobiusKeyPassword}")
     private String keyPassword;
 
-    private String token;
+    private Observable<String> tokenObservable;
 
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
+        //TODO
+        // use getToken() and getAllegroOfferDetailsObservable()
+        return null;
+    }
+
+    private Observable<AllegroOfferDetails> getAllegroOfferDetailsObservable(final String offerId, final String token) {
         return Observable.create(new Observable.OnSubscribe<AllegroOfferDetails>() {
             @Override
             public void call(final Subscriber<? super AllegroOfferDetails> subscriber) {
-                findOfferInvocationBuilder(offerId).async().get(new InvocationCallback<AllegroOfferDetails>() {
+                findOfferInvocationBuilder(offerId, token).async().get(new InvocationCallback<AllegroOfferDetails>() {
                     @Override
                     public void completed(AllegroOfferDetails o) {
                         if (!subscriber.isUnsubscribed()) {
@@ -63,11 +71,11 @@ public class MobiusClient {
         });
     }
 
-    private Invocation.Builder findOfferInvocationBuilder(String offerId) {
+    private Invocation.Builder findOfferInvocationBuilder(String offerId, String token) {
         return webTarget
                 .path("/v2/allegro/offers")
                 .path(offerId)
-                .queryParam("access_token", getToken())
+                .queryParam("access_token", token)
                 .request(MediaType.APPLICATION_JSON_TYPE);
     }
 
@@ -76,10 +84,18 @@ public class MobiusClient {
         request.setSearchString(searchString);
         request.setLimit(5);
 
+       //TODO
+        // use getToken() and getDoGetItemsListCollectionObservable()
+
+        return null;
+
+    }
+
+    private Observable<DoGetItemsListCollection> getDoGetItemsListCollectionObservable(final String token, final OffersFacadeV2Request request) {
         return Observable.create(new Observable.OnSubscribe<DoGetItemsListCollection>() {
             @Override
             public void call(final Subscriber<? super DoGetItemsListCollection> subscriber) {
-                searchInvocationBuilder().async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new InvocationCallback<DoGetItemsListCollection>() {
+                searchInvocationBuilder(token).async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new InvocationCallback<DoGetItemsListCollection>() {
                     @Override
                     public void completed(DoGetItemsListCollection o) {
                         if (!subscriber.isUnsubscribed()) {
@@ -100,26 +116,45 @@ public class MobiusClient {
         });
     }
 
-    private Invocation.Builder searchInvocationBuilder() {
+    private Invocation.Builder searchInvocationBuilder(String token) {
         return webTarget
                 .path("/v2/allegro/offers")
-                .queryParam("access_token", getToken())
+                .queryParam("access_token", token)
                 .request(MediaType.APPLICATION_JSON_TYPE);
     }
 
-
-    //TODO createToken uses blocking call, make it async - use Observable, and Subject to cache response
-    public synchronized String getToken() {
-        if (token == null) {
-            token = createToken();
+    public synchronized Observable<String> getToken() {
+        if (tokenObservable == null) {
+            //TODO
+            //cache tokens
+            tokenObservable = createToken();
         }
-        return token;
+        return tokenObservable;
     }
 
-    private String createToken() {
-        return createTokenInvocationBuilder()
-                .get(OAuthAccessTokenResponse.class)
-                .getAccess_token();
+    private Observable<String> createToken() {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                createTokenInvocationBuilder().async().get(new InvocationCallback<OAuthAccessTokenResponse>() {
+                    @Override
+                    public void completed(OAuthAccessTokenResponse o) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onNext(o.getAccess_token());
+                            subscriber.onCompleted();
+                        }
+                    }
+
+                    @Override
+                    public void failed(Throwable throwable) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onError(throwable);
+                            subscriber.unsubscribe();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private Invocation.Builder createTokenInvocationBuilder() {
