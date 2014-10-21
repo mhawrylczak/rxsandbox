@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
@@ -42,23 +41,7 @@ public class MobiusClient {
         return Observable.create(new Observable.OnSubscribe<AllegroOfferDetails>() {
             @Override
             public void call(final Subscriber<? super AllegroOfferDetails> subscriber) {
-                findOfferInvocationBuilder(offerId).async().get(new InvocationCallback<AllegroOfferDetails>() {
-                    @Override
-                    public void completed(AllegroOfferDetails o) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(o);
-                            subscriber.onCompleted();
-                        }
-                    }
-
-                    @Override
-                    public void failed(Throwable throwable) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onError(throwable);
-                            subscriber.unsubscribe();
-                        }
-                    }
-                });
+                findOfferInvocationBuilder(offerId).async().get(new RxSimpleInvocationCallback(subscriber));
             }
         });
     }
@@ -79,23 +62,7 @@ public class MobiusClient {
         return Observable.create(new Observable.OnSubscribe<DoGetItemsListCollection>() {
             @Override
             public void call(final Subscriber<? super DoGetItemsListCollection> subscriber) {
-                searchInvocationBuilder().async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new InvocationCallback<DoGetItemsListCollection>() {
-                    @Override
-                    public void completed(DoGetItemsListCollection o) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(o);
-                            subscriber.onCompleted();
-                        }
-                    }
-
-                    @Override
-                    public void failed(Throwable throwable) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onError(throwable);
-                            subscriber.unsubscribe();
-                        }
-                    }
-                });
+                searchInvocationBuilder().async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new RxSimpleInvocationCallback(subscriber));
             }
         });
     }
