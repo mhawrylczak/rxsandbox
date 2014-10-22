@@ -40,6 +40,17 @@ public class MobiusClient {
 
     private Subject<String, String> tokenSubject;
 
+    //TODO try to use getOfferView,
+    // now it delegates to findOffer but suppose that the implementation is much faster than calling searchOffers + getOfferViews
+    public Observable<Long> getOfferViews(final String offerId){
+        return findOffer(offerId).map(new Func1<AllegroOfferDetails, Long>() {
+            @Override
+            public Long call(AllegroOfferDetails offerDetails) {
+                return offerDetails.getViews();
+            }
+        });
+    }
+
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
         Observable<Observable<AllegroOfferDetails>> ooOffer = getToken().map(new Func1<String, Observable<AllegroOfferDetails>>() {
             @Override
