@@ -10,8 +10,7 @@ import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
 import rx.Observable;
 import rx.Subscriber;
-import rx.subjects.AsyncSubject;
-import rx.subjects.Subject;
+import rx.functions.Func1;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -49,7 +48,7 @@ public class MobiusClient {
         return Observable.create(new Observable.OnSubscribe<AllegroOfferDetails>() {
             @Override
             public void call(final Subscriber<? super AllegroOfferDetails> subscriber) {
-                findOfferInvocationBuilder(offerId, token).async().get(new RxSimpleInvocationCallback<AllegroOfferDetails>(subscriber){});
+                findOfferInvocationBuilder(offerId, token).async().get(new RxSimpleInvocationCallback<AllegroOfferDetails>(subscriber) {});
             }
         });
     }
@@ -67,7 +66,7 @@ public class MobiusClient {
         request.setSearchString(searchString);
         request.setLimit(5);
 
-       //TODO
+        //TODO
         // use getToken() and getDoGetItemsListCollectionObservable()
 
         return null;
@@ -78,7 +77,8 @@ public class MobiusClient {
         return Observable.create(new Observable.OnSubscribe<DoGetItemsListCollection>() {
             @Override
             public void call(final Subscriber<? super DoGetItemsListCollection> subscriber) {
-                searchInvocationBuilder(token).async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new RxSimpleInvocationCallback<DoGetItemsListCollection>(subscriber){});
+                searchInvocationBuilder(token).async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new RxSimpleInvocationCallback<DoGetItemsListCollection>(subscriber) {
+                });
             }
         });
     }
@@ -100,26 +100,15 @@ public class MobiusClient {
     }
 
     private Observable<String> createToken() {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+        return Observable.create(new Observable.OnSubscribe<OAuthAccessTokenResponse>() {
             @Override
-            public void call(final Subscriber<? super String> subscriber) {
-                createTokenInvocationBuilder().async().get(new InvocationCallback<OAuthAccessTokenResponse>() {
-                    @Override
-                    public void completed(OAuthAccessTokenResponse o) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(o.getAccess_token());
-                            subscriber.onCompleted();
-                        }
-                    }
-
-                    @Override
-                    public void failed(Throwable throwable) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onError(throwable);
-                            subscriber.unsubscribe();
-                        }
-                    }
-                });
+            public void call(final Subscriber<? super OAuthAccessTokenResponse> subscriber) {
+                createTokenInvocationBuilder().async().get(new RxSimpleInvocationCallback<OAuthAccessTokenResponse>(subscriber) {});
+            }
+        }).map(new Func1<OAuthAccessTokenResponse, String>() {
+            @Override
+            public String call(OAuthAccessTokenResponse oAuthAccessTokenResponse) {
+                return oAuthAccessTokenResponse.getAccess_token();
             }
         });
     }
