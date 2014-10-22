@@ -2,6 +2,9 @@ package pl.allegro.atm.workshop.rx.mobius;
 
 
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.rx.RxClient;
+import org.glassfish.jersey.client.rx.RxWebTarget;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferDetails;
@@ -25,12 +28,12 @@ import javax.ws.rs.core.MediaType;
 public class MobiusClient {
 
     @Inject
-    @Named("mobiusWebTarget")
-    private WebTarget webTarget;
+    @Named("rxMobiusWebTarget")
+    private RxWebTarget<RxObservableInvoker> webTarget;
 
     @Inject
-    @Named("mobiusAuthWebTarget")
-    private WebTarget authWebTarget;
+    @Named("rxMobiusAuthWebTarget")
+    private RxWebTarget<RxObservableInvoker> authWebTarget;
 
     @Value("${mobiusKeyUser}")
     private String keyUser;
@@ -60,20 +63,16 @@ public class MobiusClient {
     }
 
     private Observable<AllegroOfferDetails> getAllegroOfferDetailsObservable(final String offerId, final String token) {
-        return Observable.create(new Observable.OnSubscribe<AllegroOfferDetails>() {
-            @Override
-            public void call(final Subscriber<? super AllegroOfferDetails> subscriber) {
-                findOfferInvocationBuilder(offerId, token).async().get(new RxSimpleInvocationCallback<AllegroOfferDetails>(subscriber) {});
-            }
-        });
+        return findOfferInvocationBuilder(offerId, token).get(AllegroOfferDetails.class);
     }
 
-    private Invocation.Builder findOfferInvocationBuilder(String offerId, String token) {
+    private RxObservableInvoker findOfferInvocationBuilder(String offerId, String token) {
         return webTarget
                 .path("/v2/allegro/offers")
                 .path(offerId)
                 .queryParam("access_token", token)
-                .request(MediaType.APPLICATION_JSON_TYPE);
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .rx();
     }
 
     public Observable<DoGetItemsListCollection> searchOffers(String searchString) {
@@ -93,20 +92,15 @@ public class MobiusClient {
     }
 
     private Observable<DoGetItemsListCollection> getDoGetItemsListCollectionObservable(final String token, final OffersFacadeV2Request request) {
-        return Observable.create(new Observable.OnSubscribe<DoGetItemsListCollection>() {
-            @Override
-            public void call(final Subscriber<? super DoGetItemsListCollection> subscriber) {
-                searchInvocationBuilder(token).async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new RxSimpleInvocationCallback<DoGetItemsListCollection>(subscriber) {
-                });
-            }
-        });
+        return searchInvocationBuilder(token).post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), DoGetItemsListCollection.class);
     }
 
-    private Invocation.Builder searchInvocationBuilder(String token) {
+    private RxObservableInvoker searchInvocationBuilder(String token) {
         return webTarget
                 .path("/v2/allegro/offers")
                 .queryParam("access_token", token)
-                .request(MediaType.APPLICATION_JSON_TYPE);
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .rx();
     }
 
 
@@ -119,12 +113,7 @@ public class MobiusClient {
     }
 
     private Observable<String> createToken() {
-        return Observable.create(new Observable.OnSubscribe<OAuthAccessTokenResponse>() {
-            @Override
-            public void call(final Subscriber<? super OAuthAccessTokenResponse> subscriber) {
-                createTokenInvocationBuilder().async().get(new RxSimpleInvocationCallback<OAuthAccessTokenResponse>(subscriber) {});
-            }
-        }).map(new Func1<OAuthAccessTokenResponse, String>() {
+        return createTokenInvocationBuilder().get(OAuthAccessTokenResponse.class).map(new Func1<OAuthAccessTokenResponse, String>() {
             @Override
             public String call(OAuthAccessTokenResponse oAuthAccessTokenResponse) {
                 return oAuthAccessTokenResponse.getAccess_token();
@@ -132,13 +121,14 @@ public class MobiusClient {
         });
     }
 
-    private Invocation.Builder createTokenInvocationBuilder() {
+    private RxObservableInvoker createTokenInvocationBuilder() {
         return authWebTarget
                 .path("oauth/auth")
                 .queryParam("grant_type", "client_credentials")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_USERNAME, keyUser)
-                .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD, keyPassword);
+                .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD, keyPassword)
+                .rx();
     }
 
 }
