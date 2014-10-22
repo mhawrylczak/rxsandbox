@@ -17,6 +17,10 @@
     </bean>
 
     <bean id="mobiusAuthWebTarget" factory-bean="mobiusClientFactory" factory-method="authWebTarget"/>
+    <bean id="rxMobiusAuthWebTarget" factory-bean="mobiusClientFactory" factory-method="rxAuthWebTarget"/>
+
     <bean id="mobiusWebTarget" factory-bean="mobiusClientFactory" factory-method="defaultWebTarget"/>
+    <bean id="rxMobiusWebTarget" factory-bean="mobiusClientFactory" factory-method="rxDefaultWebTarget"/>
+
 
 </beans>
