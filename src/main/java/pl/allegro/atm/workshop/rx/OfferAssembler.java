@@ -22,25 +22,11 @@ public class OfferAssembler {
         return offer;
     }
 
-    //TODO
-    //view property was added to Offer but it is not available in DoGetItemsListCollection
-    public List<Offer> convert(DoGetItemsListCollection items) {
-        return Lists.transform(items.getOffers(), new Function<AllegroOfferV2, Offer>() {
-            @Nullable
-            @Override
-            public Offer apply(@Nullable AllegroOfferV2 item) {
-                if (item != null) {
-                    return convert(item);
-                }
-                return null;
-            }
-        });
-    }
-
-    private Offer convert(AllegroOfferV2 item) {
+    public Offer convert(AllegroOfferV2 item, long views) {
         Offer offer = new Offer();
         offer.setId(item.getId());
         offer.setName(item.getName());
+        offer.setViews(views);
         return offer;
     }
 }

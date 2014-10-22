@@ -2,9 +2,11 @@ package pl.allegro.atm.workshop.rx;
 
 import pl.allegro.atm.workshop.rx.mobius.MobiusClient;
 import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferDetails;
+import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferV2;
 import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -26,12 +28,27 @@ public class OfferResource {
     @GET
     public void search(@QueryParam("q") String searchString, @Suspended final AsyncResponse asyncResponse) {
         Observable<DoGetItemsListCollection> observableOffers = mobiusClient.searchOffers(searchString);
-        Observable<List<Offer>> observableList = observableOffers.map(new Func1<DoGetItemsListCollection, List<Offer>>() {
+        Observable<Observable<AllegroOfferV2>> ooOffers = observableOffers.map(new Func1<DoGetItemsListCollection, Observable<AllegroOfferV2>>() {
             @Override
-            public List<Offer> call(DoGetItemsListCollection doGetItemsListCollection) {
-                return offerAssembler.convert(doGetItemsListCollection);
+            public Observable<AllegroOfferV2> call(DoGetItemsListCollection doGetItemsListCollection) {
+                return Observable.from(doGetItemsListCollection.getOffers());
             }
         });
+        final Observable<AllegroOfferV2> allegroOffersV2 = Observable.merge(ooOffers);
+
+        Observable<Observable<Offer>> ooResult = allegroOffersV2.map( new Func1<AllegroOfferV2, Observable<Offer>>() {
+            @Override
+            public Observable<Offer> call(AllegroOfferV2 allegroOfferV2) {
+                Observable<Long> oViews = mobiusClient.getOfferViews(allegroOfferV2.getId());
+                return Observable.zip(Observable.just(allegroOfferV2), oViews, new Func2<AllegroOfferV2, Long, Offer>() {
+                    @Override
+                    public Offer call(AllegroOfferV2 allegroOfferV2, Long views) {
+                        return offerAssembler.convert(allegroOfferV2, views);
+                    }
+                });
+            }
+        });
+        Observable<List<Offer>> observableList = Observable.merge(ooResult).toList();
         asyncResponse(observableList, asyncResponse);
     }
 
