@@ -27,16 +27,15 @@ public class OfferResource {
 
     @GET
     public void search(@QueryParam("q") String searchString, @Suspended final AsyncResponse asyncResponse) {
-        Observable<DoGetItemsListCollection> observableOffers = mobiusClient.searchOffers(searchString);
-        Observable<Observable<AllegroOfferV2>> ooOffers = observableOffers.map(new Func1<DoGetItemsListCollection, Observable<AllegroOfferV2>>() {
+        Observable<DoGetItemsListCollection> oDoGetItemsListCollection = mobiusClient.searchOffers(searchString);
+        final Observable<AllegroOfferV2> oAllegroOfferV2 = oDoGetItemsListCollection.flatMap(new Func1<DoGetItemsListCollection, Observable<AllegroOfferV2>>() {
             @Override
             public Observable<AllegroOfferV2> call(DoGetItemsListCollection doGetItemsListCollection) {
                 return Observable.from(doGetItemsListCollection.getOffers());
             }
         });
-        final Observable<AllegroOfferV2> allegroOffersV2 = Observable.merge(ooOffers);
 
-        Observable<Observable<Offer>> ooResult = allegroOffersV2.map( new Func1<AllegroOfferV2, Observable<Offer>>() {
+        Observable<Offer> oOffers = oAllegroOfferV2.flatMap( new Func1<AllegroOfferV2, Observable<Offer>>() {
             @Override
             public Observable<Offer> call(AllegroOfferV2 allegroOfferV2) {
                 Observable<Long> oViews = mobiusClient.getOfferViews(allegroOfferV2.getId());
@@ -48,8 +47,8 @@ public class OfferResource {
                 });
             }
         });
-        Observable<List<Offer>> observableList = Observable.merge(ooResult).toList();
-        asyncResponse(observableList, asyncResponse);
+        Observable<List<Offer>> result = oOffers.toList();
+        asyncResponse(result, asyncResponse);
     }
 
     @GET
