@@ -41,7 +41,7 @@ public class MobiusClient {
         return Observable.create(new Observable.OnSubscribe<AllegroOfferDetails>() {
             @Override
             public void call(final Subscriber<? super AllegroOfferDetails> subscriber) {
-                findOfferInvocationBuilder(offerId).async().get(new RxSimpleInvocationCallback(subscriber));
+                findOfferInvocationBuilder(offerId).async().get(new RxSimpleInvocationCallback<AllegroOfferDetails>(subscriber){});
             }
         });
     }
@@ -62,7 +62,7 @@ public class MobiusClient {
         return Observable.create(new Observable.OnSubscribe<DoGetItemsListCollection>() {
             @Override
             public void call(final Subscriber<? super DoGetItemsListCollection> subscriber) {
-                searchInvocationBuilder().async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new RxSimpleInvocationCallback(subscriber));
+                searchInvocationBuilder().async().post(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE), new RxSimpleInvocationCallback<DoGetItemsListCollection>(subscriber){});
             }
         });
     }

@@ -4,7 +4,7 @@ import rx.Subscriber;
 
 import javax.ws.rs.client.InvocationCallback;
 
-class RxSimpleInvocationCallback<T> implements InvocationCallback<T> {
+abstract class RxSimpleInvocationCallback<T> implements InvocationCallback<T> {
     private final Subscriber<? super T> subscriber;
 
     public RxSimpleInvocationCallback(Subscriber<? super T> subscriber) {
