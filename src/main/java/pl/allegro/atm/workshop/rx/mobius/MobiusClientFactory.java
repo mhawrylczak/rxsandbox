@@ -4,6 +4,10 @@ package pl.allegro.atm.workshop.rx.mobius;
 import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.rx.RxWebTarget;
+import org.glassfish.jersey.client.rx.rxjava.RxObservable;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
+import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,14 +37,22 @@ public class MobiusClientFactory {
         return defaultClient().target(mobiusUrl);
     }
 
+    public RxWebTarget<RxObservableInvoker> rxDefaultWebTarget(){
+        return RxObservable.from(defaultWebTarget());
+    }
+
     public Client defaultClient(){
-        Configuration configuration = new ClientConfig();
+        ClientConfig configuration = new ClientConfig();
         SSLContext sslContext = getSslContext();
         return ClientBuilder.newBuilder().withConfig(configuration).sslContext(sslContext).build();
     }
 
     public WebTarget authWebTarget(){
         return authClient().target(mobiusUrl);
+    }
+
+    public RxWebTarget<RxObservableInvoker> rxAuthWebTarget(){
+        return RxObservable.from(authWebTarget());
     }
 
     public Client authClient(){

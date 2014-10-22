@@ -59,6 +59,10 @@ dependencies {
     compile group: 'org.springframework',   name: 'spring-context', version: '4.1.1.RELEASE'
     compile group: 'org.springframework',   name: 'spring-aspects', version: '4.1.1.RELEASE'
     compile group: 'io.reactivex',     name: 'rxjava',      version: '1.0.0-rc.5'
+    compile group: 'org.glassfish.jersey.containers',     name: 'jersey-container-servlet',      version: '2.13'
+    compile group: 'org.glassfish.jersey.connectors',     name: 'jersey-jetty-connector',      version: '2.13'
+    compile group: 'org.glassfish.jersey.ext.rx',         name:'jersey-rx-client-rxjava',      version: '2.13'
+    compile group: 'org.glassfish.jersey.ext',         name:'jersey-spring3',      version: '2.13'
 
     testCompile group: 'junit',                 name: 'junit',             version: '4.11'
     testCompile group: 'com.jayway.awaitility', name: 'awaitility',        version: '1.6.0'
