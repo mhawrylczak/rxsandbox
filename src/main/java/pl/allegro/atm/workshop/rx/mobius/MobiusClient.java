@@ -72,8 +72,12 @@ public class MobiusClient {
         request.setSearchString(searchString);
         request.setLimit(5);
 
-       //TODO
-        // use getToken() and getDoGetItemsListCollectionObservable()
+        Observable<Observable<DoGetItemsListCollection>> ooItems = getToken().map(new Func1<String, Observable<DoGetItemsListCollection>>() {
+            @Override
+            public Observable<DoGetItemsListCollection> call(final String token) {
+                return getDoGetItemsListCollectionObservable(token, request);
+            }
+        });
 
         return Observable.merge(ooItems);
 
