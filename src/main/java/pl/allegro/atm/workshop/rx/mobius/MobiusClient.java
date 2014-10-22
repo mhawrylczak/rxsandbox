@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 @Component
 public class MobiusClient {
 
+    //TODO use RxWebTarget<RxObservableInvoker> - bean rxMobiusWebTarget and rxMobiusAuthWebTarget to make the code simpler
     @Inject
     @Named("mobiusWebTarget")
     private WebTarget webTarget;
