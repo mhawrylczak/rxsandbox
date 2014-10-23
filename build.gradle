@@ -1,14 +1,15 @@
 buildscript {
     repositories {
-        maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.release' }
+//        maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.release' }
 	    mavenCentral()
         jcenter()
     }
     dependencies {
-        classpath group: 'pl.allegro.tech.build', name: 'axion-gradle-plugin', version: '0.1.11'
-        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '0.3.1'
-        classpath group: 'pl.allegro.tech.build', name: 'sonar-bamboo-plugin', version: '0.3.1'
+//        classpath group: 'pl.allegro.tech.build', name: 'axion-gradle-plugin', version: '0.1.11'
+//        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '0.3.1'
+//        classpath group: 'pl.allegro.tech.build', name: 'sonar-bamboo-plugin', version: '0.3.1'
         classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '1.0.2'
+        classpath fileTree(dir: 'dependencies/classpath', include: '*.jar')
     }
 }
 
@@ -34,8 +35,8 @@ project.group = 'pl.allegro.atm.workshop.rx'
 project.version = scmVersion.version
 
 repositories {
-    maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.release' }
-    maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro-release/' }
+//    maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro.pl.release' }
+//    maven { url 'https://nexus.allegrogroup.com/nexus/content/repositories/allegro-release/' }
     mavenCentral()
 }
 
@@ -44,13 +45,14 @@ project.ext.versions = [
 ]
 
 dependencies {
-    compile (group: 'pl.allegro.tech.bootstrap.commons', name: 'profile-jersey-spring', version: project.ext.versions.commons ){
-        exclude group: 'junit'
-    }
-    compile (group: 'pl.allegro.tech.discovery.service-discovery', name: 'jersey-client-feature', version: '1.1.4') {
-        exclude group: 'org.slf4j'
-        exclude group: 'log4j'
-    }
+//    compile (group: 'pl.allegro.tech.bootstrap.commons', name: 'profile-jersey-spring', version: project.ext.versions.commons ){
+//        exclude group: 'junit'
+//    }
+//    compile (group: 'pl.allegro.tech.discovery.service-discovery', name: 'jersey-client-feature', version: '1.1.4') {
+//        exclude group: 'org.slf4j'
+//        exclude group: 'log4j'
+//    }
+    compile fileTree(dir: 'dependencies/compile', include: '*.jar')
 
 
     compile group: 'joda-time',        name: 'joda-time',       version: '2.3'
@@ -69,7 +71,8 @@ dependencies {
     testCompile group: 'org.assertj',           name: 'assertj-guava',     version: '1.1.0'
     testCompile group: 'com.github.tomakehurst',     name: 'wiremock',     version: '1.50'
 
-    testCompile group: 'pl.allegro.tech.bootstrap.commons', name: 'core-integration', version: project.ext.versions.commons
+    testCompile fileTree(dir: 'dependencies/testCompile', include: '*.jar')
+//    testCompile group: 'pl.allegro.tech.bootstrap.commons', name: 'core-integration', version: project.ext.versions.commons
 
 }
 
