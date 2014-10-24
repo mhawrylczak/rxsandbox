@@ -2,6 +2,10 @@ Zadanie 02
 =========
 Dokończ implementację __OfferResource.search__ tak by była w pełni asynchroniczna. 
 
+Zadanie dodatkowe
+------
+Zrób to samo z  __OfferResource.offer__ i __MobiusClient.findOffer__ 
+
 Pomocne linki
 ------------
 * [Observer]
