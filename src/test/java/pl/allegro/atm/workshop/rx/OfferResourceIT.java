@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.assertj.core.api.Assertions;
 import org.junit.*;
 import pl.allegro.tech.bootstrap.commons.integration.RestServiceStarted;
+import pl.allegro.tech.bootstrap.core.spi.ApplicationConfiguration;
 
 import javax.ws.rs.core.GenericType;
 import java.util.List;
@@ -23,7 +24,8 @@ public class OfferResourceIT {
     public WireMockClassRule instanceRule = wireMockRule;
 
     @ClassRule
-    public static RestServiceStarted service = new RestServiceStarted();
+    public static RestServiceStarted service = new RestServiceStarted(
+            new ApplicationConfiguration.Builder().withAsyncSupported());
 
     @BeforeClass
     public static void before(){
