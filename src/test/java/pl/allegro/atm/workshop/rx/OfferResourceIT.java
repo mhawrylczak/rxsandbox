@@ -41,6 +41,10 @@ public class OfferResourceIT {
         stubFor(post(urlMatching("/v2/allegro/offers" + ".*"))
                 .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "application/json").withBodyFile("offers.json")));
 
+        stubFor(get(urlMatching("/v2/allegro/offers/\\d+.*"))
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "application/json").withBodyFile("offer.json")));
+
+
         GenericType<List<Offer>> offersListType = new GenericType<List<Offer>>() {};
         List<Offer> offers = service.getWebTarget().path("/offers").queryParam("q", searchString).request().get(offersListType);
 
