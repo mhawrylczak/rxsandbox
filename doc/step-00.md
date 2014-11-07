@@ -53,6 +53,7 @@ Testy
 gradlew test
 ```
 
+
 Zadanie
 ----
 Uruchomić aplikacje i testy.
@@ -68,3 +69,12 @@ Po wykonaniu przejsć do zadadanie nr 1.
 ```
 checkout -f step-01
 ```
+
+Llista przykładów
+======
+1. Tworzenie Observable
+2. Observer
+3. Subjec & transformations
+4. Subjec & transformations c.d. 
+5. Combinig observables
+6. jersey rx client 
