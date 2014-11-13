@@ -14,8 +14,6 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import java.util.List;
 
-import static pl.allegro.atm.workshop.rx.RxJerseyHelpers.asyncResponse;
-
 @Path("/offers")
 @Produces("application/json")
 public class OfferResource {
@@ -27,22 +25,25 @@ public class OfferResource {
 
     @GET
     public void search(@QueryParam("q") String searchString, @Suspended final AsyncResponse asyncResponse) {
-        Observable<Offer> oOffers =  mobiusClient
+        mobiusClient
                 .searchOffers(searchString)
-                .flatMap(itemsListCollection -> Observable.from(itemsListCollection.getOffers()))
-                .flatMap(
+                .<AllegroOfferV2>flatMap(itemsListCollection -> Observable.from(itemsListCollection.getOffers()))
+                .<Offer>flatMap(
                         (AllegroOfferV2 allegroOfferV2) ->
                                 Observable.zip(
                                         Observable.just(allegroOfferV2),
                                         mobiusClient.getOfferViews(allegroOfferV2.getId()),
                                         offerAssembler::convert)
-                );
-        asyncResponse(oOffers.toList(), asyncResponse);
+                )
+                .toList()
+                .subscribe(asyncResponse::resume, asyncResponse::resume);
     }
 
     @GET
     @Path("{id}")
     public void offer(@PathParam("id") String id, @Suspended final AsyncResponse asyncResponse) {
-        asyncResponse(mobiusClient.findOffer(id).map(offerAssembler::convert), asyncResponse);
+        mobiusClient.findOffer(id)
+                .map(offerAssembler::convert)
+                .subscribe( asyncResponse::resume, asyncResponse::resume);
     }
 }
