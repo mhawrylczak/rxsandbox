@@ -2,7 +2,6 @@ package pl.allegro.atm.workshop.rx;
 
 import pl.allegro.atm.workshop.rx.mobius.MobiusClient;
 import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferV2;
-import rx.Observable;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -12,7 +11,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-import java.util.List;
+
+import static rx.Observable.from;
+import static rx.Observable.just;
+import static rx.Observable.zip;
 
 @Path("/offers")
 @Produces("application/json")
@@ -27,11 +29,11 @@ public class OfferResource {
     public void search(@QueryParam("q") String searchString, @Suspended final AsyncResponse asyncResponse) {
         mobiusClient
                 .searchOffers(searchString)
-                .<AllegroOfferV2>flatMap(itemsListCollection -> Observable.from(itemsListCollection.getOffers()))
+                .<AllegroOfferV2>flatMap(itemsListCollection -> from(itemsListCollection.getOffers()))
                 .<Offer>flatMap(
                         (AllegroOfferV2 allegroOfferV2) ->
-                                Observable.zip(
-                                        Observable.just(allegroOfferV2),
+                                zip(
+                                        just(allegroOfferV2),
                                         mobiusClient.getOfferViews(allegroOfferV2.getId()),
                                         offerAssembler::convert)
                 )

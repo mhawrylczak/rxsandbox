@@ -39,7 +39,7 @@ public class MobiusClient {
     private Subject<String, String> tokenSubject;
 
     public Observable<Long> getOfferViews(final String offerId){
-        return findOffer(offerId).map(offerDetail -> offerDetail.getViews());
+        return findOffer(offerId).map(AllegroOfferDetails::getViews);
     }
 
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
@@ -91,7 +91,7 @@ public class MobiusClient {
     private Observable<String> createToken() {
         return createTokenInvocationBuilder()
                 .get(OAuthAccessTokenResponse.class)
-                .map(response -> response.getAccess_token());
+                .map(OAuthAccessTokenResponse::getAccess_token);
     }
 
     private RxObservableInvoker createTokenInvocationBuilder() {
