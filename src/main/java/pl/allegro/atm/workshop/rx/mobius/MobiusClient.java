@@ -2,7 +2,6 @@ package pl.allegro.atm.workshop.rx.mobius;
 
 
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.client.rx.RxClient;
 import org.glassfish.jersey.client.rx.RxWebTarget;
 import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,16 +11,12 @@ import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
 import rx.subjects.AsyncSubject;
 import rx.subjects.Subject;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
 @Component
@@ -44,22 +39,11 @@ public class MobiusClient {
     private Subject<String, String> tokenSubject;
 
     public Observable<Long> getOfferViews(final String offerId){
-        return findOffer(offerId).map(new Func1<AllegroOfferDetails, Long>() {
-            @Override
-            public Long call(AllegroOfferDetails offerDetails) {
-                return offerDetails.getViews();
-            }
-        });
+        return findOffer(offerId).map(offerDetail -> offerDetail.getViews());
     }
 
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
-        Observable<Observable<AllegroOfferDetails>> ooOffer = getToken().map(new Func1<String, Observable<AllegroOfferDetails>>() {
-            @Override
-            public Observable<AllegroOfferDetails> call(String token) {
-                return getAllegroOfferDetailsObservable(offerId, token);
-            }
-        });
-        return Observable.merge(ooOffer);
+        return getToken().flatMap(token -> getAllegroOfferDetailsObservable(offerId, token));
     }
 
     private Observable<AllegroOfferDetails> getAllegroOfferDetailsObservable(final String offerId, final String token) {
@@ -80,15 +64,7 @@ public class MobiusClient {
         request.setSearchString(searchString);
         request.setLimit(5);
 
-        Observable<Observable<DoGetItemsListCollection>> ooItems = getToken().map(new Func1<String, Observable<DoGetItemsListCollection>>() {
-            @Override
-            public Observable<DoGetItemsListCollection> call(final String token) {
-                return getDoGetItemsListCollectionObservable(token, request);
-            }
-        });
-
-        return Observable.merge(ooItems);
-
+        return getToken().flatMap(token -> getDoGetItemsListCollectionObservable(token, request));
     }
 
     private Observable<DoGetItemsListCollection> getDoGetItemsListCollectionObservable(final String token, final OffersFacadeV2Request request) {
@@ -113,12 +89,9 @@ public class MobiusClient {
     }
 
     private Observable<String> createToken() {
-        return createTokenInvocationBuilder().get(OAuthAccessTokenResponse.class).map(new Func1<OAuthAccessTokenResponse, String>() {
-            @Override
-            public String call(OAuthAccessTokenResponse oAuthAccessTokenResponse) {
-                return oAuthAccessTokenResponse.getAccess_token();
-            }
-        });
+        return createTokenInvocationBuilder()
+                .get(OAuthAccessTokenResponse.class)
+                .map(response -> response.getAccess_token());
     }
 
     private RxObservableInvoker createTokenInvocationBuilder() {

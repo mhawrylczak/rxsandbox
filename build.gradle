@@ -28,7 +28,8 @@ scmVersion {
     }
 }
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
+
 
 project.group = 'pl.allegro.atm.workshop.rx'
 project.version = scmVersion.version
