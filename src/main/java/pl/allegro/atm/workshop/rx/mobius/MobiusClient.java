@@ -36,14 +36,29 @@ public class MobiusClient {
     @Value("${mobiusKeyPassword}")
     private String keyPassword;
 
-    private Subject<String, String> tokenSubject;
+    private volatile Subject<String, String> tokenSubject;
 
     public Observable<Long> getOfferViews(final String offerId){
         return findOffer(offerId).map(AllegroOfferDetails::getViews);
     }
 
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
-        return getToken().flatMap(token -> getAllegroOfferDetailsObservable(offerId, token));
+        return getToken()
+                .flatMap(token -> getAllegroOfferDetailsObservable(offerId, token))
+                .retryWhen(errors -> errors.flatMap((Throwable throwable) -> {
+                            if (throwable instanceof RuntimeException) {//TODO jaki execptions jest gdy token jest zły ?
+                                renewToken();
+                                return Observable.just(1);
+                            } else {
+                                return Observable.error(throwable);
+                            }
+                        })
+                );
+    }
+
+    private void renewToken() {
+        //mayby atomic reference ? now is not god
+        tokenSubject = null;
     }
 
     private Observable<AllegroOfferDetails> getAllegroOfferDetailsObservable(final String offerId, final String token) {
