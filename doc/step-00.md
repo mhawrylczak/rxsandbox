@@ -59,7 +59,7 @@ Zadanie
 Uruchomić aplikacje i testy.
 Wywołać restowe metody.
 ```
-curl http://localhost:8080/offers/q=mobius
+curl http://localhost:8080/offers?q=mobius
 ```
 ```
 curl http://localhost:8080/offers/<ID>
