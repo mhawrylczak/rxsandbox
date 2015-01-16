@@ -10,14 +10,18 @@ import pl.allegro.atm.workshop.rx.mobius.model.AllegroOfferDetails;
 import pl.allegro.atm.workshop.rx.mobius.model.DoGetItemsListCollection;
 import pl.allegro.atm.workshop.rx.mobius.model.OAuthAccessTokenResponse;
 import pl.allegro.atm.workshop.rx.mobius.model.OffersFacadeV2Request;
+import rx.Notification;
 import rx.Observable;
 import rx.subjects.AsyncSubject;
 import rx.subjects.Subject;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class MobiusClient {
@@ -45,20 +49,27 @@ public class MobiusClient {
     public Observable<AllegroOfferDetails> findOffer(final String offerId) {
         return getToken()
                 .flatMap(token -> getAllegroOfferDetailsObservable(offerId, token))
-                .retryWhen(errors -> errors.flatMap((Throwable throwable) -> {
-                            if (throwable instanceof RuntimeException) {//TODO jaki execptions jest gdy token jest zły ?
-                                renewToken();
-                                return Observable.just(1);
-                            } else {
-                                return Observable.error(throwable);
-                            }
-                        })
-                );
+                .retryWhen(this::handleNotAuthorizedException);
     }
 
-    private void renewToken() {
-        //mayby atomic reference ? now is not god
-        tokenSubject = null;
+    private Observable<?> handleNotAuthorizedException(Observable<? extends Notification<?>> notifications){
+        return notifications.flatMap((Notification notification) -> {
+            if (isCausedBy(notification.getThrowable(), NotAuthorizedException.class)) {
+                return refreshToken();
+            } else {
+                return Observable.error(notification.getThrowable());
+            }
+        });
+    }
+
+    private boolean isCausedBy(Throwable throwable, Class cause){
+        Set<Object> exceptions  = new HashSet<>();
+        for(Throwable t = throwable; t!= null && !exceptions.contains(t); exceptions.add(t), t = t.getCause()){
+            if (cause.isAssignableFrom(t.getClass())){
+                return true;
+            }
+        }
+        return false;
     }
 
     private Observable<AllegroOfferDetails> getAllegroOfferDetailsObservable(final String offerId, final String token) {
@@ -79,7 +90,7 @@ public class MobiusClient {
         request.setSearchString(searchString);
         request.setLimit(5);
 
-        return getToken().flatMap(token -> getDoGetItemsListCollectionObservable(token, request));
+        return getToken().flatMap(token -> getDoGetItemsListCollectionObservable(token, request)).retryWhen(this::handleNotAuthorizedException);
     }
 
     private Observable<DoGetItemsListCollection> getDoGetItemsListCollectionObservable(final String token, final OffersFacadeV2Request request) {
@@ -94,6 +105,12 @@ public class MobiusClient {
                 .rx();
     }
 
+    public synchronized Observable<String> refreshToken(){
+        Subject<String, String> refreshedSubject = AsyncSubject.create();
+        createToken().subscribe(refreshedSubject);
+        tokenSubject = refreshedSubject;
+        return tokenSubject.asObservable();
+    }
 
     public synchronized Observable<String> getToken() {
         if (tokenSubject == null) {
