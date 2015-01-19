@@ -9,9 +9,11 @@ dla zwiększenia prędkowści getOfferViews powinno zostać wywołane równolegl
 
 Pomocne linki
 ------------
+* [zip]
 * [Combining-Observables]
 * [Transforming Observables]
 
+[zip]:https://github.com/ReactiveX/RxJava/wiki/Transforming-Observables#map
 [map]:https://github.com/ReactiveX/RxJava/wiki/Transforming-Observables#map
 [Transforming Observables]:https://github.com/ReactiveX/RxJava/wiki/Transforming-Observables
 [Subject]:https://github.com/ReactiveX/RxJava/wiki/Subject 
