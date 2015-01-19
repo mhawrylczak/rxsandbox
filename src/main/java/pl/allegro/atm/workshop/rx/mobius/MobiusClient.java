@@ -52,12 +52,12 @@ public class MobiusClient {
                 .retryWhen(this::handleNotAuthorizedException);
     }
 
-    private Observable<?> handleNotAuthorizedException(Observable<? extends Notification<?>> notifications){
-        return notifications.flatMap((Notification notification) -> {
-            if (isCausedBy(notification.getThrowable(), NotAuthorizedException.class)) {
+    private Observable<?> handleNotAuthorizedException(Observable<? extends Throwable> oThrowable){
+        return oThrowable.flatMap((Throwable throwable) -> {
+            if (isCausedBy(throwable, NotAuthorizedException.class)) {
                 return refreshToken();
             } else {
-                return Observable.error(notification.getThrowable());
+                return Observable.error(throwable);
             }
         });
     }
